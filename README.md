@@ -14,6 +14,8 @@ cd extractor-recognizer-int3411
 pip install -r requirements.txt
 ```  
   
+**Note:** If you fail to install `Gooey` by `pip` then you have to install it using conda by typing `conda install -c conda-forge gooey`. Otherwise, you can delete all Gooey usage in [`feature_extractor.py`](int3411/feature_extractor.py) and [`recognizer.py`](int3411/recognizer.py), and replace `GooeyParser` by `ArgParser` Follow this [issues](https://github.com/chriskiehl/Gooey/issues/690) for more details.
+  
 ## Usage  
 There are 2 different parts of the program.  
   
