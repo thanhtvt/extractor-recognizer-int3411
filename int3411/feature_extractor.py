@@ -1,14 +1,18 @@
 import os
 import argparse
 import src
+from gooey import Gooey, GooeyParser
 
 
+@Gooey(default_size=(800, 600), required_cols=1, optional_cols=3, use_cmd_args=True)
 def parser():
-    parser = argparse.ArgumentParser(description='Extract MFCC features from audio files')
-    parser.add_argument('audio_path', type=str, help='Path to audio file')
-    parser.add_argument('label_path', type=str, help='Path to label file')
-    parser.add_argument('-sf', '--save_fig', action='store_true', help='Whether to save figure')
-    parser.add_argument('-sm', '--save_mat', action='store_true', help='Whether to save mat file')
+    parser = GooeyParser(description='Extract MFCC features from audio files')
+    # parser = argparse.ArgumentParser(description='Extract MFCC features from audio files')
+    parser.add_argument('audio_path', type=str, help='Path to audio file', widget='FileChooser')
+    parser.add_argument('label_path', type=str, help='Path to label file', widget='FileChooser')
+    parser.add_argument('-s', '--show_fig', action='store_true', help='Show figure')
+    parser.add_argument('-sf', '--save_fig', action='store_true', help='Save figure')
+    parser.add_argument('-sm', '--save_mat', action='store_true', help='Save mat file')
     args = parser.parse_args()
 
     if not os.path.isfile(args.audio_path):
@@ -42,5 +46,5 @@ if __name__ == '__main__':
             feats = mfcc(segment, sr)
             if args.save_mat:
                 src.utils.save_mat(feats, label)
-            src.utils.plotfig(feats, label, save=args.save_fig)
+            src.utils.plotfig(feats, label, save=args.save_fig, show=args.show_fig)
     print('Done.')

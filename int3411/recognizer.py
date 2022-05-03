@@ -5,16 +5,19 @@ import pickle
 import numpy as np
 import argparse
 from scipy.io import loadmat
+from gooey import Gooey, GooeyParser
 import random
 import src
 
 
+@Gooey(default_size=(800, 600), required_cols=1, optional_cols=2, use_cmd_args=True)
 def parser():
-    parser = argparse.ArgumentParser(description='Speech Recognition')
-    parser.add_argument('-i', '--input_mat', type=str, default='.', help='Path to input mat file')
-    parser.add_argument('-d', '--mat_dir', type=str, required=True, help='Mat files directory')
+    parser = GooeyParser(description='Speech Recognition')
+    # parser = argparse.ArgumentParser(description='Speech Recognition')
+    parser.add_argument('mat_dir', type=str, help='Mat files directory', widget='DirChooser')
+    parser.add_argument('-i', '--input_mat', type=str, default='.', help='Path to input mat file', widget='FileChooser')
     parser.add_argument('-r', '--recognition_type', type=str, choices=['dtw', 'gmm-hmm'], default='dtw', help='Recognition type')
-    parser.add_argument('-m', '--pretrained_model', type=str, default='.', help='Path to pretrained model')
+    parser.add_argument('-m', '--pretrained_model', type=str, default='.', help='Path to pretrained model', widget='FileChooser')
     args = parser.parse_args()
 
     if not os.path.isdir(args.mat_dir):
@@ -63,8 +66,9 @@ def run_dtw(args):
             pred = min(score, key=score.get)
             if pred == label:
                 correct += 1
-            print(f'Predict: {pred}')
-            print(f'Groundtruth: {label}')
+            if os.path.isfile(args.input_mat):
+                print(f'\nPredict: {pred}')
+                print(f'Groundtruth: {label}')
         print(f'{label}: {correct / total * 100.0:.2f}% ({correct}/{total})')
 
 
@@ -109,8 +113,9 @@ def test(classes, models, test_data):
             pred = max(score, key=score.get)
             if pred == name:
                 correct += 1
-            print(f'Predict: {pred}')
-            print(f'Groundtruth: {name}')
+            if os.path.isfile(args.input_mat):
+                print(f'\nPredict: {pred}')
+                print(f'Groundtruth: {name}')
         print(f'{name} test set: {correct / total * 100.0:.2f}% ({correct}/{total})')
 
 
@@ -125,7 +130,7 @@ def run_gmmhmm(args):
         with open(args.pretrained_model, 'rb') as f:
             hmms = pickle.load(f)
     else:
-        print('Training...')
+        print('\nTraining...')
         start = time.time()
         hmms = train(classes, train_set)
         print(f'Done training. Took {time.time() - start}s to finish.')
@@ -133,10 +138,10 @@ def run_gmmhmm(args):
         save_path = '../models/gmmhmm.pkl'
         with open(save_path, 'wb') as f:
             pickle.dump(hmms, f)
-        print(f'Save model to {save_path}.')
+        print(f'\nSave model to {save_path}.')
 
     # Test/Infer
-    print('Testing...')
+    print('\nTesting...')
     start = time.time()
     if os.path.isfile(args.input_mat):
         input_mat = loadmat(args.input_mat)['data'].T
@@ -145,7 +150,7 @@ def run_gmmhmm(args):
         test(input_label, hmms, input)
     else:
         test(classes, hmms, test_set)
-    print(f'Done testing. Took {time.time() - start}s to finish.')
+    print(f'\nDone testing. Took {time.time() - start}s to finish.')
 
 
 if __name__ == '__main__':
