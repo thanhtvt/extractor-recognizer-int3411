@@ -44,4 +44,6 @@ Where
 - `-m`: Path to GMM-HMM pretrained model
   
 ## Demo  
-  
+1. DTW: https://youtu.be/i3qdCJy68oY  
+2. GMM-HMM: https://youtu.be/WP3bMlUxteg  
+3. Extract MFCCs: https://youtu.be/uI-SSARz72Y
