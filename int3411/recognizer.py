@@ -54,6 +54,7 @@ def run_dtw(args):
 
     # Infer
     dtw = src.models.DTW(dist_func='euclidean')
+    print('Accuracy of each label:\n-----\n')
     for label in classes:
         total, correct = 0, 0
         for mfcc in inputs[label]:

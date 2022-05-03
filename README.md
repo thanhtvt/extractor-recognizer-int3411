@@ -14,7 +14,7 @@ cd extractor-recognizer-int3411
 pip install -r requirements.txt
 ```  
   
-**Note:** If you fail to install `Gooey` by `pip` then you have to install it using conda by typing `conda install -c conda-forge gooey`. Otherwise, you can delete all Gooey usage in [`feature_extractor.py`](int3411/feature_extractor.py) and [`recognizer.py`](int3411/recognizer.py), and replace `GooeyParser` by `ArgParser` Follow this [issues](https://github.com/chriskiehl/Gooey/issues/690) for more details.
+**Note:** If you fail to install `Gooey` by `pip` then you have to install it using conda by typing `conda install -c conda-forge gooey`. Otherwise, you can delete all Gooey usage in [`feature_extractor.py`](int3411/feature_extractor.py) and [`recognizer.py`](int3411/recognizer.py), and replace `GooeyParser` by `ArgumentParser` Follow this [issues](https://github.com/chriskiehl/Gooey/issues/690) for more details.
   
 ## Usage  
 There are 2 different parts of the program.  
@@ -35,11 +35,11 @@ Where:
 ### Recognizer  
 Run:
 ```bash
-python3 recognizer.py [-i INPUT_MAT] -d MAT_DIR [-r {dtw,gmm-hmm] [-m PRETRAINED_MODEL]
+python3 recognizer.py [-i INPUT_MAT] [-r {dtw,gmm-hmm] [-m PRETRAINED_MODEL] mat_dir
 ```  
 Where  
 - `-i`: Path to mat file to predict label (Use all mat files if not specified)
-- `-d`: Path to mat dir
+- `mat_dir`: Path to mat dir
 - `-r`: Type of model used (`dtw` or `gmm-hmm`)
 - `-m`: Path to GMM-HMM pretrained model
   
