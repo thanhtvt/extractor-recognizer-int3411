@@ -1,5 +1,5 @@
 librosa
-numpy
+numpy==1.21
 scipy
 matplotlib
 hmmlearn
