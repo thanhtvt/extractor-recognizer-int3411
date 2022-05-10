@@ -32,7 +32,6 @@ class DTW:
         template = np.add.reduce(templates) / num_templates
         return template
 
-
     @staticmethod
     def align_from_path(template, path):
         aligned_template = []
@@ -56,16 +55,35 @@ class DTW:
         return aligned_template.T
 
 
-def prepare_data_for_dtw(dir, num_templates=4):
+# def get_templates():
+#     return {
+#         'xuong': ['194.mat', '269.mat', '391.mat', '23.mat'],
+#         'A':     ['38.mat', '126.mat', '312.mat', '370.mat'],
+#         'phai':  ['87.mat', '133.mat', '258.mat', '361.mat'],
+#         'len':   ['11.mat', '176.mat', '277.mat', '482.mat'],
+#         'ban':   ['92.mat', '234.mat', '322.mat', '412.mat'],
+#         'B':     ['77.mat', '226.mat', '304.mat', '468.mat'],
+#         'trai':  ['8.mat', '179.mat', '279.mat', '405.mat'],
+#         'nhay':  ['47.mat', '213.mat', '333.mat', '459.mat'],
+#     }
+
+
+def prepare_data_for_dtw(dir, num_templates: int = 4):
     inputs, templates = {}, {}
     classes = os.listdir(dir)
     for label in classes:
         mat_dir = os.path.join(dir, label)
         mat_files = os.listdir(mat_dir)
-        random.shuffle(mat_files)
+        mat_files.sort(key=lambda x: int(x.split('.')[0]))
+        num_files = len(mat_files)
+        template_files = []
+        for i in range(num_templates):
+            start = i * (num_files // num_templates)
+            end = (i + 1) * (num_files // num_templates) if i < num_templates - 1 else num_files
+            f = random.choice(mat_files[start:end])
+            template_files.append(f)
+        input_files = list(set(mat_files) - set(template_files))
 
-        template_files = mat_files[:num_templates]
-        input_files = mat_files[num_templates:]
         template_files = [os.path.join(mat_dir, mat_file) for mat_file in template_files]
         input_files = [os.path.join(mat_dir, mat_file) for mat_file in input_files]
         templates[label] = [normalize(loadmat(mat_file)['data']) for mat_file in template_files]
@@ -83,7 +101,7 @@ def run_dtw(mat_dir, input_mat):
         classes = inp['label']
 
     # Infer
-    dtw = DTW(dist_func='euclidean')
+    dtw = DTW(dist_func='cosine')
     for cname, template_mfccs in templates.items():
         template_mfcc = dtw.average_template(template_mfccs)
         templates[cname] = template_mfcc
