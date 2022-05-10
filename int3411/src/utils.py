@@ -1,5 +1,6 @@
 import os
 import random
+import numpy as np
 from scipy.io import wavfile, savemat
 import matplotlib.pyplot as plt
 
@@ -60,3 +61,7 @@ def refactor_database(old_data_dir, new_data_dir):
             test_str = ' '.join(test_files)
             os.system(f'mv {train_str} {data_path}/train/')
             os.system(f'mv {test_str} {data_path}/test/')
+
+
+def normalize(data: np.ndarray):
+    return (data - np.mean(data)) / np.std(data)

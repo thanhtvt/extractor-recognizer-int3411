@@ -6,7 +6,7 @@ import logging
 from hmmlearn import hmm
 from scipy.io import loadmat
 
-from .utils import refactor_database
+from .utils import refactor_database, normalize
 
 
 class GMMHMM:
@@ -67,11 +67,11 @@ def prepare_data_for_gmmhmm(mat_dir, new_path, transpose=True):
         train_dir = os.path.join(class_dir, 'train')
         test_dir = os.path.join(class_dir, 'test')
         if transpose:
-            train[cname] = [loadmat(os.path.join(train_dir, mat_file))['data'].T for mat_file in os.listdir(train_dir)]
-            test[cname] = [loadmat(os.path.join(test_dir, mat_file))['data'].T for mat_file in os.listdir(test_dir)]
+            train[cname] = [normalize(loadmat(os.path.join(train_dir, mat_file))['data'].T) for mat_file in os.listdir(train_dir)]
+            test[cname] = [normalize(loadmat(os.path.join(test_dir, mat_file))['data'].T) for mat_file in os.listdir(test_dir)]
         else:
-            train[cname] = [loadmat(os.path.join(train_dir, mat_file))['data'] for mat_file in os.listdir(train_dir)]
-            test[cname] = [loadmat(os.path.join(test_dir, mat_file))['data'] for mat_file in os.listdir(test_dir)]
+            train[cname] = [normalize(loadmat(os.path.join(train_dir, mat_file))['data']) for mat_file in os.listdir(train_dir)]
+            test[cname] = [normalize(loadmat(os.path.join(test_dir, mat_file))['data']) for mat_file in os.listdir(test_dir)]
 
     return train, test, classes
 
@@ -118,7 +118,7 @@ def run_gmmhmm(mat_dir, pretrained_model, input_mat=None):
         print('\nTraining...')
         start = time.time()
         hmms = train(classes, train_set)
-        print(f'Done training. Took {time.time() - start}s to finish.')
+        print(f'Done training. Took {time.time() - start:.3f}s to finish.')
         
         save_path = '../models/gmmhmm.pkl'
         with open(save_path, 'wb') as f:
@@ -135,4 +135,4 @@ def run_gmmhmm(mat_dir, pretrained_model, input_mat=None):
         test(input_label, hmms, input, input_mat)
     else:
         test(classes, hmms, test_set, input_mat)
-    print(f'\nDone testing. Took {time.time() - start}s to finish.')
+    print(f'\nDone testing. Took {time.time() - start:.3f}s to finish.')
