@@ -14,7 +14,8 @@ cd extractor-recognizer-int3411
 pip install -r requirements.txt
 ```  
   
-**Note:** If you fail to install `Gooey` by `pip` then you have to install it using conda by typing `conda install -c conda-forge gooey`. Otherwise, you can delete all Gooey usage in [`feature_extractor.py`](int3411/feature_extractor.py) and [`recognizer.py`](int3411/recognizer.py), and replace `GooeyParser` by `ArgumentParser` Follow this [issues](https://github.com/chriskiehl/Gooey/issues/690) for more details.
+**Note:** If you fail to install `Gooey` by `pip` then you have to install it using conda by typing `conda install -c conda-forge gooey`. Otherwise, you can delete all Gooey usage in [`feature_extractor.py`](int3411/feature_extractor.py) and [`recognizer.py`](int3411/recognizer.py), and replace `GooeyParser` by `ArgumentParser`.  
+Follow this [issues](https://github.com/chriskiehl/Gooey/issues/690) for more details.
   
 ## Usage  
 There are 2 different parts of the program.  
@@ -44,6 +45,6 @@ Where
 - `-m`: Path to GMM-HMM pretrained model
   
 ## Demo  
-1. DTW: https://youtu.be/i3qdCJy68oY  
+1. DTW: https://youtu.be/zsGJkNjViEA  
 2. GMM-HMM: https://youtu.be/WP3bMlUxteg  
 3. Extract MFCCs: https://youtu.be/uI-SSARz72Y
