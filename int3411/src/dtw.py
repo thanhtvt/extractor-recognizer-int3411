@@ -97,7 +97,7 @@ def run_dtw(mat_dir, input_mat):
     templates, inputs, classes = prepare_data_for_dtw(mat_dir, 4)
     if os.path.isfile(input_mat):
         inp = loadmat(input_mat)
-        inputs = {inp['label'][0]: [inp['data']]}
+        inputs = {inp['label'][0]: [normalize(inp['data'])]}
         classes = inp['label']
 
     # Infer

@@ -77,10 +77,11 @@ def prepare_data_for_gmmhmm(mat_dir, new_path, transpose=True):
 
 
 def train(classes, train_data):
+    num_state_per_phoneme = {'A': 2, 'B': 2, 'ban': 6, 'len': 6, 'nhay': 6, 'phai': 6, 'trai': 6, 'xuong': 8}
     hmms = {}
-    num_state_per_phoneme = 3
+    # num_state_per_phoneme = 3
     for name in classes:
-        n_components = num_state_per_phoneme * len(name) if len(name) >= 2 else 6
+        n_components = num_state_per_phoneme[name] * len(name) if len(name) >= 2 else 6
         hmm = GMMHMM(n_components=n_components, bakis_level=3)
         X = np.concatenate(train_data[name])
         hmm.model.fit(X)
@@ -94,6 +95,7 @@ def test(classes, models, test_data, input_mat=None):
         for item in test_data[name]:
             total += 1
             score = {cname: model.score(item, [len(item)]) for cname, model in models.items()}
+            print(score)
             pred = max(score, key=score.get)
             if pred == name:
                 correct += 1
@@ -111,7 +113,7 @@ def run_gmmhmm(mat_dir, pretrained_model, input_mat=None):
 
     # Train
     if os.path.isfile(pretrained_model):
-        print(f'Load pretrained model from {pretrained_model}')
+        print(f'Load pretrained model: {pretrained_model}')
         with open(pretrained_model, 'rb') as f:
             hmms = pickle.load(f)
     else:
@@ -129,7 +131,7 @@ def run_gmmhmm(mat_dir, pretrained_model, input_mat=None):
     print('\nTesting...')
     start = time.time()
     if os.path.isfile(input_mat):
-        mat = loadmat(input_mat)['data'].T
+        mat = normalize(loadmat(input_mat)['data'].T)
         input_label = loadmat(input_mat)['label']
         input = {input_label[0]: [mat]}
         test(input_label, hmms, input, input_mat)
